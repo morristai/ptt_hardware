@@ -1,16 +1,18 @@
+# -*- coding: utf-8 -*
 from typing import List
 import requests
 import re
 from bs4 import BeautifulSoup
 
-search_key = ["itx", "Z390-I", "z390-I", "Z390-i", "ITX"]
-rollback = 3
-proxy = False
+proxies = {
+            "http": "http://proxy-chain.intel.com:912",
+            "https": "http://proxy-chain.intel.com:912",
+        }
 header = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36",
     "sec-fetch-user": "?1",
     "dnt": "1",
-    "accept-encoding": "gzip, deflate",  # 不能放br，不然就是要裝額外的解碼器
+    "accept-encoding": "gzip, deflate", # Can't place "br", otherwise need to install other decoder
     "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "cookie": "__cfduid=d5bf85bc78cd75c30beabfc2c14e52e5f1567955601; _ga=GA1.2.410818996.1567955602; _gid=GA1.2.1223439128.1582700194; _gat=1",
@@ -19,14 +21,9 @@ header = {
     "sec-fetch-site": "none",
     "upgrade-insecure-requests": "1",
 }
-
-
 class Hardware:
     def __int__(self):
-        self.proxies = {
-            "http": "http://proxy-chain.intel.com:912",
-            "https": "http://proxy-chain.intel.com:912",
-        }
+        pass
 
     def get_data(self, url= None,  get_first=False, proxy=False):
         if get_first:
@@ -36,7 +33,7 @@ class Hardware:
                     headers=header,
                     verify=True,
                     timeout=3,
-                    proxies=self.proxies)
+                    proxies=proxies)
             else:
                 resp = requests.get(
                     "https://www.ptt.cc/bbs/HardwareSale/index.html",
@@ -50,7 +47,7 @@ class Hardware:
                     headers=header,
                     verify=True,
                     timeout=3,
-                    proxies=self.proxies)
+                    proxies=proxies)
             else:
                 resp = requests.get(
                     url,
@@ -68,7 +65,7 @@ class Hardware:
         # TODO
         found = {}
         for i in range(0, rollback):
-            next_url = f"https://www.ptt.cc/bbs/HardwareSale/index{latest - i}.html"
+            next_url = f"https://www.ptt.cc/bbs/HardwareSale/index{latest-i}.html"
             result = self.get_data(url=next_url, get_first=False, proxy=proxy)
             soup = BeautifulSoup(result.text, 'html.parser')
             found.update(self.search_word(soup, words=words))
@@ -86,14 +83,14 @@ class Hardware:
             except BaseException:
                 continue
             for key in words:
-                if bool(re.match(f".*{key}.*", title)):
+                if bool(re.match(f".*賣.*{key}.*", title)):
                     product_url = f"https://www.ptt.cc/{item.find('a').get('href')}"
                     temp[title] = product_url
         return temp
 
 
-if __name__ == "__main__":
-    s = Hardware()
-    result = s.get_data(get_first=True, proxy=proxy)
-    found = s.data_processing(result, rollback=rollback, proxy=proxy, words=search_key)
-    print(found)
+# if __name__ == "__main__":
+#     s = Hardware()
+#     result = s.get_data(get_first=True, proxy=proxy)
+#     found = s.data_processing(result, rollback=rollback, proxy=proxy, words=search_key)
+#     print(found)
