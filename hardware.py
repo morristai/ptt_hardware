@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*
-from typing import List
 import requests
 import re
 from bs4 import BeautifulSoup
 
 proxies = {
-            "http": "http://proxy-chain.intel.com:912",
-            "https": "http://proxy-chain.intel.com:912",
-        }
+    "http": "http://proxy-chain.intel.com:912",
+    "https": "http://proxy-chain.intel.com:912",
+}
 header = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36",
     "sec-fetch-user": "?1",
     "dnt": "1",
-    "accept-encoding": "gzip, deflate", # Can't place "br", otherwise need to install other decoder
+    # Can't place "br", otherwise need to install other decoder
+    "accept-encoding": "gzip, deflate",
     "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "cookie": "__cfduid=d5bf85bc78cd75c30beabfc2c14e52e5f1567955601; _ga=GA1.2.410818996.1567955602; _gid=GA1.2.1223439128.1582700194; _gat=1",
@@ -21,11 +21,13 @@ header = {
     "sec-fetch-site": "none",
     "upgrade-insecure-requests": "1",
 }
+
+
 class Hardware:
     def __int__(self):
         pass
 
-    def get_data(self, url= None,  get_first=False, proxy=False):
+    def get_data(self, url=None, get_first=False, proxy=False):
         if get_first:
             if proxy:
                 resp = requests.get(
@@ -87,10 +89,3 @@ class Hardware:
                     product_url = f"https://www.ptt.cc/{item.find('a').get('href')}"
                     temp[title] = product_url
         return temp
-
-
-# if __name__ == "__main__":
-#     s = Hardware()
-#     result = s.get_data(get_first=True, proxy=proxy)
-#     found = s.data_processing(result, rollback=rollback, proxy=proxy, words=search_key)
-#     print(found)
