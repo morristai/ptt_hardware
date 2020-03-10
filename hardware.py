@@ -85,7 +85,7 @@ class Hardware:
             except BaseException:
                 continue
             for key in words:
-                if bool(re.match(f".*賣.*{key}.*", title)):
+                if bool(re.match(f".*賣.*{key}.*", title)) and not bool(re.match(f".*售出.*", title)):
                     product_url = f"https://www.ptt.cc/{item.find('a').get('href')}"
                     temp[title] = product_url
         return temp
