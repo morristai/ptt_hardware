@@ -3,7 +3,7 @@ import smtplib
 import ssl
 from email.mime.multipart import MIMEMultipart
 from hardware import Hardware
-from config import search_key, proxy
+from config import search_key, proxy, gmail_password
 from email.mime.text import MIMEText
 import pickle
 from collections import deque
@@ -12,7 +12,7 @@ subject = "Hardware List"
 body = "This is an email with attachment sent from Python"
 sender_email = "diaper151@gmail.com"
 receiver_email = "diaper151@gmail.com"
-password = "your_password"
+password = gmail_password
 
 # Create a multipart message and set headers
 message = MIMEMultipart()

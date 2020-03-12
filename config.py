@@ -10,4 +10,5 @@ search_key = [
     "ITX",
 ]
 
+gmail_password = "your_password"
 proxy = False
