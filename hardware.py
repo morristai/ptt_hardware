@@ -50,6 +50,7 @@ class Hardware:
         soup = BeautifulSoup(resp.text, 'html.parser')
         latest = str(soup.find_all("a", string="‹ 上頁")[0])
         latest = int(re.search(r'\d{4}', latest).group(0))
+        latest += 1
         # TODO: need to automatic init
         with open('index.pkl', 'rb') as handle:
             rollback = pickle.load(handle)
@@ -58,9 +59,9 @@ class Hardware:
         else:
             with open('index.pkl', 'wb') as handle:
                 pickle.dump(latest, handle, protocol=pickle.HIGHEST_PROTOCOL)
-            # Since we're back to one previous page, so we need to +2 to
+            # Since we're back to one previous page, so we need to +1 to
             # include the newest.
-            latest_list = [i for i in range(rollback, latest + 2)]
+            latest_list = [i for i in range(rollback, latest + 1)]
             return latest_list
 
     def data_processing(self, index, words, proxy=False):
